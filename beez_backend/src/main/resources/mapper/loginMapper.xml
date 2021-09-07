@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.blockb.beez.dao.TestDao">
+    <select id="testPrintMember" resultType="com.blockb.beez.vo.TestVo">
+		SELECT 	name, birth, id, email, phone FROM MEMBER
+	</select>
+	<insert id="" parameterType="com.blockb.beez.vo.TestVo">
+
+    </insert>
+</mapper>
