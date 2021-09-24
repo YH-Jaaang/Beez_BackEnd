@@ -26,15 +26,43 @@
 			<artifactId>mybatis-spring-boot-starter</artifactId>
 			<version>2.2.0</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.web3j/web3j-spring-boot-starter -->
+		<!-- <dependency>
+			<groupId>org.web3j</groupId>
+			<artifactId>web3j-spring-boot-starter</artifactId>
+			<version>1.6.0</version>
+		</dependency> -->
+		<!-- https://mvnrepository.com/artifact/org.web3j/core -->
+		<dependency>
+			<groupId>org.web3j</groupId>
+			<artifactId>core</artifactId>
+			<version>4.8.7</version>
+		</dependency>
+		<!--  Needed to avoid conflict with OkHttp being used in auth0-java and okhttp3 being used by spring -->
+		<dependency>
+			<groupId>com.squareup.okhttp3</groupId>
+			<artifactId>okhttp</artifactId>
+			<version>4.9.0</version>
+		</dependency>
+		<!-- <dependency>
+			<groupId>org.web3j</groupId>
+			<artifactId>core</artifactId>
+			<version>4.2.0</version>
+		</dependency> -->
 		 <dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
 
-		<dependency>
+		<!-- <dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
+		</dependency> -->
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt</artifactId>
+			<version>0.9.1</version>
 		</dependency>
 		<dependency>
 			<groupId>com.oracle.database.jdbc</groupId>
@@ -52,6 +80,33 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
+		
+		<!--SecretKey Base64로 인코딩 -->
+		<dependency>
+			<groupId>javax.xml.bind</groupId>
+			<artifactId>jaxb-api</artifactId>
+			<version>2.3.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.xml.bind</groupId>
+			<artifactId>jaxb-impl</artifactId>
+			<version>2.3.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.glassfish.jaxb</groupId>
+			<artifactId>jaxb-runtime</artifactId>
+			<version>2.3.0</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.activation</groupId>
+			<artifactId>activation</artifactId>
+			<version>1.1.1</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -59,6 +114,14 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<excludes>
+						<exclude>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+						</exclude>
+					</excludes>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

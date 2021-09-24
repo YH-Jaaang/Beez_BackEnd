@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.blockb.beez.dao.UserMapper">
+    <!-- 로그인, 회원가입 시, 리턴 -->
+	<select id="findUserByUsername" resultType="com.blockb.beez.dto.UserDto">
+        SELECT user_id userId, username, password, role, wallet_address walletAddress
+        FROM USER1
+        WHERE username = #{username}
+    </select>
+    <!-- 인증 시, 사용  -->
+    <select id="findByUserId" resultType="com.blockb.beez.dto.UserDto">
+        SELECT user_id userId, username, PASSWORD, role
+        FROM USER1
+        WHERE user_id = #{userId}
+    </select>
+    
+    <!-- 회원가입 -->
+    <insert id="save" parameterType="com.blockb.beez.dto.UserDto">
+        INSERT INTO USER1 (user_id, username, password, wallet_address)
+        VALUES (USER_SEQ.NEXTVAL, #{username}, #{password}, #{walletAddress})
+    </insert>
+</mapper>

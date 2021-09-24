@@ -1,0 +1,14 @@
+{
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Spring Boot-BeezApplication<beez>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "console": "internalConsole",
+      "mainClass": "com.blockb.beez.BeezApplication",
+      "projectName": "beez",
+      "args": ""
+    }
+  ]
+}
