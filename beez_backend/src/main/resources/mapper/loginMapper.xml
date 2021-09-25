@@ -3,7 +3,7 @@
 
 <mapper namespace="com.blockb.beez.dao.LoginDao">
     <select id="userLogin" resultType="String">
-		SELECT WALLET_ADDRESS AS walletAddress FROM MEMBER WHERE ID = #{id} AND PASSWORD = #{password}
+		SELECT WALLET_ADDRESS AS walletAddress FROM USER1 WHERE USERNAME = #{id}
 	</select>
 	<!-- <insert id="testDB" parameterType="String">
 		INSERT INTO COMFIRM(TEST) VALUES (#{abc});

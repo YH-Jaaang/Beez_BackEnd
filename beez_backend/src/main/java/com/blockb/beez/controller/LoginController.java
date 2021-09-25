@@ -42,10 +42,6 @@ public class LoginController {
     @Autowired
     ResponseService responseService;
 
-    @PostMapping("/user")
-    public String userLogin(@RequestParam("id") String id, @RequestParam("password")String password) {
-        return loginService.userLogin(id, password);
-    }
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody LoginDto loginDto) {
         //username, password 잘 가져옴.
@@ -56,7 +52,7 @@ public class LoginController {
             
             List<String> list = new ArrayList<>();
             list.add(token);
-            list.add(loginService.userLogin(loginDto.getUsername(), loginDto.getPassword()));
+            list.add(loginService.userLogin(loginDto.getUsername()));
 
             HttpHeaders httpHeaders = new HttpHeaders();
             httpHeaders.add("Authorization", "Bearer " + token);

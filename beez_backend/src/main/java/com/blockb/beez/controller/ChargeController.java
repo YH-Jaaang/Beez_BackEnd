@@ -3,9 +3,6 @@ package com.blockb.beez.controller;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
-import javax.servlet.http.HttpServletRequest;
-
-import com.blockb.beez.dto.ChargeDto;
 import com.blockb.beez.service.ChargeService;
 
 import org.springframework.beans.factory.annotation.Autowired;

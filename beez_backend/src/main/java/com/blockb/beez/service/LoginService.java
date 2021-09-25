@@ -10,8 +10,8 @@ public class LoginService {
     @Autowired
     LoginDao loginDao;
     
-    public String userLogin(String id, String password){
-        String loginDb = loginDao.userLogin(id,password);
+    public String userLogin(String id){
+        String loginDb = loginDao.userLogin(id);
         if(loginDb == null){
             return "fail";
         }
