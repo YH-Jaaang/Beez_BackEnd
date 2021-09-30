@@ -1,23 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.blockb.beez.dao.UserMapper">
+<mapper namespace="com.blockb.beez.dao.UserDao">
     <!-- 로그인, 회원가입 시, 리턴 -->
+    <!-- SELECT user_id userId, email, password, name, phone, wallet_address walletAddress, private_key privateKey, bank_name bankName, account_number accountNumber, role -->
 	<select id="findUserByUsername" resultType="com.blockb.beez.dto.UserDto">
-        SELECT user_id userId, username, password, role, wallet_address walletAddress
-        FROM USER1
-        WHERE username = #{username}
+        SELECT user_id userId, email, password, nickname nickName, role
+        FROM MEMBER
+        WHERE email = #{email}
     </select>
     <!-- 인증 시, 사용  -->
     <select id="findByUserId" resultType="com.blockb.beez.dto.UserDto">
-        SELECT user_id userId, username, PASSWORD, role
-        FROM USER1
+        SELECT user_id userId, email, PASSWORD, role
+        FROM MEMBER
         WHERE user_id = #{userId}
     </select>
     
     <!-- 회원가입 -->
     <insert id="save" parameterType="com.blockb.beez.dto.UserDto">
-        INSERT INTO USER1 (user_id, username, password, wallet_address)
-        VALUES (USER_SEQ.NEXTVAL, #{username}, #{password}, #{walletAddress})
+        INSERT INTO MEMBER (user_id, email, password, name, phone, wallet_address, private_key, bank_name, account_number)
+        VALUES (MEMBER_SEQ.NEXTVAL, #{email}, #{password}, #{name}, #{phone}, #{walletAddress}, #{privateKey}, #{bankName}, #{accountNumber})
     </insert>
 </mapper>

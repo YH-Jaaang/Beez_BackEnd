@@ -1,17 +1,17 @@
 package com.blockb.beez.service;
 
-import com.blockb.beez.dao.LoginDao;
+import com.blockb.beez.dao.AddressDao;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class LoginService {
+public class AddressService {
     @Autowired
-    LoginDao loginDao;
+    AddressDao addressDao;
     
-    public String userLogin(String id){
-        String loginDb = loginDao.userLogin(id);
+    public String userLogin(String email){
+        String loginDb = addressDao.userLogin(email);
         if(loginDb == null){
             return "fail";
         }

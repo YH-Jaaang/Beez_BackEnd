@@ -7,9 +7,9 @@ import java.util.Optional;
 import com.blockb.beez.dto.UserDto;
 
 @Mapper
-public interface UserMapper {
+public interface UserDao {
     //Optional는 널포인트오류를 방지
-    Optional<UserDto> findUserByUsername(String username);
+    Optional<UserDto> findUserByUsername(String email);
     Optional<UserDto> findByUserId(Long userId);
     void save(UserDto userDto);
 }

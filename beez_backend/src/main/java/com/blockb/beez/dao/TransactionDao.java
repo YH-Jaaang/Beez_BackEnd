@@ -37,11 +37,12 @@ import org.web3j.utils.Convert.Unit;
 public class TransactionDao { 
     private String address = "0x55B38346042632bb37271d39C1573DaE5D8832D9";
 
-    private String contract = "0xCAEe2054f34e1FBb9805BC67E28aF9e16ce39b4a"; // 0x3eBFd27aB71BF359c384CdE82e077AdE0Af89db8
+    //WONTOKEN CA(컨트랙트주소)
+    private String contract = "0x69F77178Db8145A8586ab001435F301aE873E0B2"; // 0x3eBFd27aB71BF359c384CdE82e077AdE0Af89db8
 
-    String walletPassword = "6003wkddudgh";
+    String walletPassword = "Blockbbeez1101";
     String walletDirectory = "wallets";
-    String walletName ="UTC--2021-09-16T11-33-44.217Z--55b38346042632bb37271d39c1573dae5d8832d9";
+    String walletName ="UTC--2021-09-30T04-17-22.503Z--e96864b245de769fcc64c1e9f4466a0caad526c5";
             
     private Admin web3j = null;
 
@@ -82,7 +83,7 @@ public class TransactionDao {
         return personalUnlockAccount.accountUnlocked() != null && personalUnlockAccount.accountUnlocked();
     }
 
-    /* ########트랜젝셕 생성하기######## */
+    /* ########트랜젝션 생성하기######## */
     public String ethSendTransaction(Function function) throws IOException, InterruptedException {
         //private키를 통해서 address값 가져오기
         Credentials credentials = null;

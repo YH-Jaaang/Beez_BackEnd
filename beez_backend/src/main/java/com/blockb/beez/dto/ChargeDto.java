@@ -10,6 +10,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ChargeDto {
-    private String address;
-    private String chargeAmount;
+    private String email;
+    private String charge;
 }

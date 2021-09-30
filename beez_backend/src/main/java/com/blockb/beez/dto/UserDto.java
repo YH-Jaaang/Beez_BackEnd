@@ -18,11 +18,18 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UserDto implements UserDetails {
     private Long userId;
-    private String username;
+    private String email;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
-    private String role;
+    private String name;
+    private String nickName;
+    private String phone;
     private String walletAddress;
+    private String privateKey;
+    private String bankName;
+    private String accountNumber;
+    private String role;
+    
 
     // 이하 코드는 security 를 위한 용도
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
@@ -40,7 +47,7 @@ public class UserDto implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.username;
+        return this.email;
     }
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)

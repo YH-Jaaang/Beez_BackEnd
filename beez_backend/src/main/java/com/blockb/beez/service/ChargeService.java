@@ -2,13 +2,19 @@ package com.blockb.beez.service;
 
 import java.util.concurrent.ExecutionException;
 
+import com.blockb.beez.dao.HistoryDao;
 import com.blockb.beez.dao.TransactionDao;
 
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.web3j.abi.TypeReference;
 import org.web3j.abi.datatypes.Address;
@@ -21,6 +27,8 @@ import org.web3j.protocol.exceptions.TransactionException;
 @Service
 public class ChargeService { 
     private TransactionDao transactionDao;
+    @Autowired
+    HistoryDao historyDao;
 
     public ChargeService(TransactionDao transactionDao)
     {
@@ -32,17 +40,32 @@ public class ChargeService {
     //     return dd;
     // }
     
-    public int totalSupply() throws IOException, ExecutionException, InterruptedException, TransactionException {
+    public List<Integer> totalSupply() throws IOException, ExecutionException, InterruptedException, TransactionException {
 
         // 1. 호출하고자 하는 function 세팅[functionName, parameters]
         Function function = new Function("totalSupply",
                                          Collections.emptyList(),
                                          Arrays.asList(new TypeReference<Uint256>() {}));
-
+        Function function2 = new Function("totalSupply",
+                                         Collections.emptyList(),
+                                         Arrays.asList(new TypeReference<Uint256>() {}));
+        Function function3 = new Function("totalSupply",
+                                         Collections.emptyList(),
+                                         Arrays.asList(new TypeReference<Uint256>() {}));
+        Function function4 = new Function("totalSupply",
+                                         Collections.emptyList(),
+                                         Arrays.asList(new TypeReference<Uint256>() {}));
+        List<Integer> transaction = new ArrayList<>();
         // 2. ethereum을 function 변수로 통해 호출
-        return ((BigInteger)transactionDao.ethCall(function)).intValue();
+        transaction.add(((BigInteger)transactionDao.ethCall(function)).intValue());
+        transaction.add(((BigInteger)transactionDao.ethCall(function2)).intValue());
+        transaction.add(((BigInteger)transactionDao.ethCall(function3)).intValue());
+        transaction.add(((BigInteger)transactionDao.ethCall(function4)).intValue());
+        
+        return transaction;
     }
     public void chargeCheck(String userAddress, int amount) throws IOException, ExecutionException, InterruptedException {
+        
         // 1. 호출하고자 하는 function 세팅[functionName, parameters]
 //          여러개 넣고자 할 때,
 //         Arrays.asList(
@@ -59,6 +82,12 @@ public class ChargeService {
 
         // 7. getReceipt
         transactionDao.getReceipt(txHash);
+
+        // 8. DB CHARGE HISTORY 남기기
+        Map<String, String> history = new HashMap<String, String>();
+        history.put("userAddress", userAddress);
+        history.put("amount", String.valueOf(amount));
+        historyDao.chargeHistory(history);
     }
     public void ethSend(String toAddress) throws IOException {
         String txHash = transactionDao.ethSend(toAddress);

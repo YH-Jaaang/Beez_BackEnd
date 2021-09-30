@@ -18,7 +18,6 @@ import com.blockb.beez.dto.response.SingleDataResponse;
 import com.blockb.beez.exception.DuplicatedUsernameException;
 import com.blockb.beez.exception.LoginFailedException;
 import com.blockb.beez.exception.UserNotFoundException;
-import com.blockb.beez.service.LoginService;
 import com.blockb.beez.service.ResponseService;
 import com.blockb.beez.service.UserService;
 
@@ -29,14 +28,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-
 @CrossOrigin("*")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/login")
-public class LoginController {
-    @Autowired
-    LoginService loginService;
+@RequestMapping("/api")
+public class UserController {
+
     @Autowired
     UserService userService;
     @Autowired
@@ -48,16 +45,13 @@ public class LoginController {
         ResponseEntity responseEntity = null;
         try {
             //토큰생성
-            String token = userService.login(loginDto);
-            
-            List<String> list = new ArrayList<>();
-            list.add(token);
-            list.add(loginService.userLogin(loginDto.getUsername()));
+            List<String> token = new ArrayList<>();
+            token = userService.login(loginDto);
 
             HttpHeaders httpHeaders = new HttpHeaders();
-            httpHeaders.add("Authorization", "Bearer " + token);
+            httpHeaders.add("Authorization", "Bearer " + token.get(0));
 
-            SingleDataResponse<List<String>> response = responseService.getSingleDataResponse(true, "로그인 성공", list);
+            SingleDataResponse<List<String>> response = responseService.getSingleDataResponse(true, "로그인 성공", token);
 
             responseEntity = ResponseEntity.status(HttpStatus.OK).headers(httpHeaders).body(response);
         } catch (LoginFailedException exception) {
@@ -74,8 +68,6 @@ public class LoginController {
     public ResponseEntity join(@RequestBody UserDto userDto) {
         ResponseEntity responseEntity = null;
         try {
-            //여기서 랜덤하게 지갑주소 생성!
-            userDto.setWalletAddress("0x3237F3B077bf7C5367a74D4e877D8Fc8c2B9a7c6");
             UserDto savedUser = userService.join(userDto);
             SingleDataResponse<UserDto> response = responseService.getSingleDataResponse(true, "회원가입 성공", savedUser);
 

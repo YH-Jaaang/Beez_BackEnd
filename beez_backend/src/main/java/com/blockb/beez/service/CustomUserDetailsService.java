@@ -1,6 +1,6 @@
 package com.blockb.beez.service;
 
-import com.blockb.beez.dao.UserMapper;
+import com.blockb.beez.dao.UserDao;
 import com.blockb.beez.dto.UserDto;
 import com.blockb.beez.exception.UserNotFoundException;
 
@@ -17,11 +17,11 @@ import java.util.Arrays;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private final UserMapper userMapper;
+    private final UserDao userDao;
 
     @Override
     public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
-        return userMapper.findByUserId(Long.valueOf(userId))
+        return userDao.findByUserId(Long.valueOf(userId))
                 .map(user -> addAuthorities(user))
                 .orElseThrow(() -> new UserNotFoundException(userId + "> 찾을 수 없습니다."));
     }
