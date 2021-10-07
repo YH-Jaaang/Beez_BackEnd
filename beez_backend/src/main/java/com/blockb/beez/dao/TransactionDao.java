@@ -3,6 +3,9 @@ package com.blockb.beez.dao;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
+
+import com.blockb.beez.dto.AddressDto;
+
 import java.io.File;
 import java.io.IOException;
 import java.math.BigInteger;
@@ -35,11 +38,9 @@ import org.web3j.utils.Convert.Unit;
 
 @Component
 public class TransactionDao { 
-    private String address = "0x55B38346042632bb37271d39C1573DaE5D8832D9";
+    AddressDto addressDto = new AddressDto();
 
-    //WONTOKEN CA(컨트랙트주소)
-    private String contract = "0x69F77178Db8145A8586ab001435F301aE873E0B2"; // 0x3eBFd27aB71BF359c384CdE82e077AdE0Af89db8
-
+    private String contract = addressDto.getWonTokenCA();
     String walletPassword = "Blockbbeez1101";
     String walletDirectory = "wallets";
     String walletName ="UTC--2021-09-30T04-17-22.503Z--e96864b245de769fcc64c1e9f4466a0caad526c5";
@@ -51,46 +52,16 @@ public class TransactionDao {
         web3j = Admin.build(new HttpService("https://ropsten.infura.io/v3/bfe7dce5767341bb8a9d21d0146b8624"));
     }
 
-    /* ########트랜젝션 불러오기######## */
-    public Object ethCall(Function function) throws IOException {
-
-            //2. transaction 제작
-        Transaction transaction = Transaction.createEthCallTransaction(
-            address,
-            contract,
-            FunctionEncoder.encode(function)
-        );
-                                                                                                                                         
-        //3. ethereum 호출후 결과 가져오기
-        EthCall ethCall = web3j.ethCall(transaction, DefaultBlockParameterName.LATEST).send();
-
-        //4. 결과값 decode
-        List<Type> decode = FunctionReturnDecoder.decode(ethCall.getResult(),
-                                                             function.getOutputParameters());
-
-        // System.out.println("ethCall.getResult() = " + ethCall.getResult());
-        // System.out.println("getValue = " + decode.get(0).getValue());
-        // System.out.println("getType = " + decode.get(0).getTypeAsString());
-
-        return decode.get(0).getValue();
-        
-    }
-
-    /* ########계정 활성화 UNlock(필요없음 Raw를 썼기 때문)######## */
-    public Boolean unlockAccount(String address, String privateKey) throws IOException, InterruptedException, ExecutionException {
-        PersonalUnlockAccount personalUnlockAccount = web3j.personalUnlockAccount(address, privateKey, BigInteger.valueOf(10)).sendAsync().get();
-        personalUnlockAccount.getError();
-        return personalUnlockAccount.accountUnlocked() != null && personalUnlockAccount.accountUnlocked();
-    }
-
     /* ########트랜젝션 생성하기######## */
-    public String ethSendTransaction(Function function) throws IOException, InterruptedException {
+    public String ethSendTransaction(Function function, String privateKey) throws IOException, InterruptedException {
         //private키를 통해서 address값 가져오기
         Credentials credentials = null;
         String transactionHash = null;
+
         try {
+            // 1. 지갑을 암호 해독하고 Credential 객체 생성
             credentials = WalletUtils.loadCredentials(walletPassword, walletDirectory+ File.separator + walletName);
-            
+
             // 2. account에 대한 nonce값 가져오기.
             EthGetTransactionCount ethGetTransactionCount = web3j.ethGetTransactionCount(credentials.getAddress(), DefaultBlockParameterName.LATEST).send();
             BigInteger nonce =  ethGetTransactionCount.getTransactionCount();

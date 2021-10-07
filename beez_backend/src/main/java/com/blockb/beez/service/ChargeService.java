@@ -4,9 +4,12 @@ import java.util.concurrent.ExecutionException;
 
 import com.blockb.beez.dao.HistoryDao;
 import com.blockb.beez.dao.TransactionDao;
+import com.blockb.beez.dao.UserDao;
+import com.blockb.beez.dto.AddressDto;
+import com.blockb.beez.dto.UserDto;
+import com.blockb.beez.exception.UserNotFoundException;
 
 import java.io.IOException;
-import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -16,55 +19,28 @@ import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.web3j.abi.TypeReference;
 import org.web3j.abi.datatypes.Address;
 import org.web3j.abi.datatypes.Function;
 import org.web3j.abi.datatypes.generated.Uint128;
 import org.web3j.abi.datatypes.generated.Uint256;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
-import org.web3j.protocol.exceptions.TransactionException;
 
 @Service
 public class ChargeService { 
     private TransactionDao transactionDao;
     @Autowired
     HistoryDao historyDao;
+    @Autowired
+    UserDao userDao;
+    AddressDto addressDto = new AddressDto();
 
     public ChargeService(TransactionDao transactionDao)
     {
         this.transactionDao = transactionDao;
     }
-    // TEST용
-    // public List<ChargeVo> testPrintUsers() {
-    //     List<ChargeVo> dd = new ArrayList<ChargeVo>();
-    //     return dd;
-    // }
-    
-    public List<Integer> totalSupply() throws IOException, ExecutionException, InterruptedException, TransactionException {
 
-        // 1. 호출하고자 하는 function 세팅[functionName, parameters]
-        Function function = new Function("totalSupply",
-                                         Collections.emptyList(),
-                                         Arrays.asList(new TypeReference<Uint256>() {}));
-        Function function2 = new Function("totalSupply",
-                                         Collections.emptyList(),
-                                         Arrays.asList(new TypeReference<Uint256>() {}));
-        Function function3 = new Function("totalSupply",
-                                         Collections.emptyList(),
-                                         Arrays.asList(new TypeReference<Uint256>() {}));
-        Function function4 = new Function("totalSupply",
-                                         Collections.emptyList(),
-                                         Arrays.asList(new TypeReference<Uint256>() {}));
-        List<Integer> transaction = new ArrayList<>();
-        // 2. ethereum을 function 변수로 통해 호출
-        transaction.add(((BigInteger)transactionDao.ethCall(function)).intValue());
-        transaction.add(((BigInteger)transactionDao.ethCall(function2)).intValue());
-        transaction.add(((BigInteger)transactionDao.ethCall(function3)).intValue());
-        transaction.add(((BigInteger)transactionDao.ethCall(function4)).intValue());
-        
-        return transaction;
-    }
-    public void chargeCheck(String userAddress, int amount) throws IOException, ExecutionException, InterruptedException {
+    //유저 토큰 충전
+    public List<String> chargeCheck(String userAddress, int amount) throws IOException, ExecutionException, InterruptedException {
         
         // 1. 호출하고자 하는 function 세팅[functionName, parameters]
 //          여러개 넣고자 할 때,
@@ -74,11 +50,15 @@ public class ChargeService {
 //             new Address(userAddress),
 //          ),
         Function function = new Function("chargeCheck",
-                                         Arrays.asList(new Address(userAddress), new Uint128(amount)),
+                                         Arrays.asList(new Address(userAddress), new Uint128(amount), new Uint256(1633177666)),
                                          Collections.emptyList());
 
         // 2. sendTransaction
-        String txHash = transactionDao.ethSendTransaction(function);
+        String txHash = transactionDao.ethSendTransaction(function, null);
+        
+        //return Hash값
+        List<String> transaction = new ArrayList<>();
+        transaction.add(txHash);
 
         // 7. getReceipt
         transactionDao.getReceipt(txHash);
@@ -88,14 +68,19 @@ public class ChargeService {
         history.put("userAddress", userAddress);
         history.put("amount", String.valueOf(amount));
         historyDao.chargeHistory(history);
+
+        return transaction;
     }
+    public UserDto findByUserAccount(String email) {
+        return userDao.findByUserAccount(email)
+                .orElseThrow(() -> new UserNotFoundException("없는 유저입니다."));
+    }
+
+    //회원가입시 이더 전송
     public void ethSend(String toAddress) throws IOException {
         String txHash = transactionDao.ethSend(toAddress);
 
         TransactionReceipt receipt = transactionDao.getReceipt(txHash);
         System.out.println("receipt = " + receipt);
     }
-    
-    
-
 }

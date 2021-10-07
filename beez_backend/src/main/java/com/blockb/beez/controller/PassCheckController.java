@@ -8,17 +8,12 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.security.core.Authentication;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.blockb.beez.dto.LoginDto;
 import com.blockb.beez.dto.PassCheckDto;
 import com.blockb.beez.dto.UserDto;
 import com.blockb.beez.dto.response.BaseResponse;
 import com.blockb.beez.dto.response.SingleDataResponse;
-import com.blockb.beez.exception.DuplicatedUsernameException;
-import com.blockb.beez.exception.LoginFailedException;
 import com.blockb.beez.exception.UserNotFoundException;
+import com.blockb.beez.service.PassCheckService;
 import com.blockb.beez.service.ResponseService;
 import com.blockb.beez.service.UserService;
 
@@ -32,68 +27,28 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
-public class UserController {
+public class  PassCheckController {
 
     @Autowired
-    UserService userService;
+    PassCheckService passCheckService;
     @Autowired
     ResponseService responseService;
 
-    @PostMapping("/login")
-    public ResponseEntity login(@RequestBody LoginDto loginDto) {
-        //username, password 잘 가져옴.
-        ResponseEntity responseEntity = null;
-        try {
-            //토큰생성
-            List<String> token = new ArrayList<>();
-            token = userService.login(loginDto);
-            
-            HttpHeaders httpHeaders = new HttpHeaders();
-            httpHeaders.add("Authorization", "Bearer " + token.get(0));
-
-            SingleDataResponse<List<String>> response = responseService.getSingleDataResponse(true, "로그인 성공", token);
-
-            responseEntity = ResponseEntity.status(HttpStatus.OK).headers(httpHeaders).body(response);
-        } catch (LoginFailedException exception) {
-
-            BaseResponse response = responseService.getBaseResponse(false, exception.getMessage());
-
-            responseEntity = ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        }
-
-        return responseEntity;
-    }
-    //회원 가입
-    @PostMapping("/join")
-    public ResponseEntity join(@RequestBody UserDto userDto) {
-        ResponseEntity responseEntity = null;
-        try {
-            UserDto savedUser = userService.join(userDto);
-            SingleDataResponse<UserDto> response = responseService.getSingleDataResponse(true, "회원가입 성공", savedUser);
-
-            responseEntity = ResponseEntity.status(HttpStatus.CREATED).body(response);
-        } catch (DuplicatedUsernameException exception) {
-            BaseResponse response = responseService.getBaseResponse(false, exception.getMessage());
-
-            responseEntity = ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        }
-        return responseEntity;
-    }
-
-    //회원 조회
-    @GetMapping("/users")
-    public ResponseEntity findUserByUsername(final Authentication authentication) {
+    //회원 보안 Password 여부 확인
+    @GetMapping("/pass/confirm")
+    public ResponseEntity findUserByPassConfirm(final Authentication authentication) {
         ResponseEntity responseEntity = null;
         try {
             
             Long userId = ((UserDto) authentication.getPrincipal()).getUserId();
 
-            UserDto findUser = userService.findByUserId(userId);
+            PassCheckDto findUser = passCheckService.findByUserPassConfirm(userId);
 
-            SingleDataResponse<UserDto> response = responseService.getSingleDataResponse(true, "조회 성공", findUser);
+            SingleDataResponse<PassCheckDto> response = responseService.getSingleDataResponse(true, "조회 성공", findUser);
 
             responseEntity = ResponseEntity.status(HttpStatus.CREATED).body(response);
         } catch (UserNotFoundException exception) {
+
             BaseResponse response = responseService.getBaseResponse(false, exception.getMessage());
 
             responseEntity = ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
@@ -101,5 +56,52 @@ public class UserController {
 
         return responseEntity;
     }
+    
+    //회원 PasswordCheck
+    @PostMapping("/pass/check")
+    public ResponseEntity findUserByPassCheck(final Authentication authentication,@RequestBody UserDto userDto) {
+        ResponseEntity responseEntity = null;
+        try {
+            Long userId = ((UserDto) authentication.getPrincipal()).getUserId();
+            
+            PassCheckDto findUser = passCheckService.findByUserPassCheck(userId, userDto.getPassword());
+
+            SingleDataResponse<PassCheckDto> response = responseService.getSingleDataResponse(true, "조회 성공", findUser);
+
+            responseEntity = ResponseEntity.status(HttpStatus.CREATED).body(response);
+        } catch (UserNotFoundException exception) {
+
+            BaseResponse response = responseService.getBaseResponse(false, exception.getMessage());
+
+            responseEntity = ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+
+        return responseEntity;
+    }
+
+    //회원 PasswordStorage
+    @PostMapping("/pass/storage")
+    public ResponseEntity findUserByPassStorage(final Authentication authentication,@RequestBody PassCheckDto passCheckDto) {
+        ResponseEntity responseEntity = null;
+        try {
+            System.out.println(passCheckDto.getPasswordCheck()+"");
+            Long userId = ((UserDto) authentication.getPrincipal()).getUserId();
+            System.out.println(userId+"");
+            passCheckDto.setUserId(userId);
+            passCheckService.findByUserPassStorage(passCheckDto);
+
+            SingleDataResponse<String> response = responseService.getSingleDataResponse(true, "저장 성공", "");
+
+            responseEntity = ResponseEntity.status(HttpStatus.CREATED).body(response);
+        } catch (UserNotFoundException exception) {
+            
+            BaseResponse response = responseService.getBaseResponse(false, exception.getMessage());
+
+            responseEntity = ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+
+        return responseEntity;
+    }
+    
 
 }
