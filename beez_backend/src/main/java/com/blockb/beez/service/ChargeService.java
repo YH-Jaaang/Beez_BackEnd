@@ -50,7 +50,7 @@ public class ChargeService {
 //             new Address(userAddress),
 //          ),
         Function function = new Function("chargeCheck",
-                                         Arrays.asList(new Address(userAddress), new Uint128(amount), new Uint256(1633177666)),
+                                         Arrays.asList(new Address(userAddress), new Uint128(amount)),
                                          Collections.emptyList());
 
         // 2. sendTransaction
