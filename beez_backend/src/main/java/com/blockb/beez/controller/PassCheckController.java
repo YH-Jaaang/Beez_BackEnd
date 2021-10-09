@@ -1,6 +1,5 @@
 package com.blockb.beez.controller;
 
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +14,6 @@ import com.blockb.beez.dto.response.SingleDataResponse;
 import com.blockb.beez.exception.UserNotFoundException;
 import com.blockb.beez.service.PassCheckService;
 import com.blockb.beez.service.ResponseService;
-import com.blockb.beez.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -61,16 +59,20 @@ public class  PassCheckController {
     @PostMapping("/pass/check")
     public ResponseEntity findUserByPassCheck(final Authentication authentication,@RequestBody UserDto userDto) {
         ResponseEntity responseEntity = null;
+        Long userId = ((UserDto) authentication.getPrincipal()).getUserId();
         try {
-            Long userId = ((UserDto) authentication.getPrincipal()).getUserId();
-            
+
             PassCheckDto findUser = passCheckService.findByUserPassCheck(userId, userDto.getPassword());
 
             SingleDataResponse<PassCheckDto> response = responseService.getSingleDataResponse(true, "조회 성공", findUser);
 
             responseEntity = ResponseEntity.status(HttpStatus.CREATED).body(response);
-        } catch (UserNotFoundException exception) {
 
+        } catch (UserNotFoundException exception) {
+            
+            if(exception.getMessage().equals("비밀번호가 틀립니다.")){
+                passCheckService.saveFailCount(userId);
+            }
             BaseResponse response = responseService.getBaseResponse(false, exception.getMessage());
 
             responseEntity = ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);

@@ -1,8 +1,6 @@
 package com.blockb.beez.dao;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.ExecutionException;
 
 import com.blockb.beez.dto.AddressDto;
 
@@ -13,19 +11,14 @@ import java.math.BigInteger;
 import org.springframework.stereotype.Component;
 
 import org.web3j.abi.FunctionEncoder;
-import org.web3j.abi.FunctionReturnDecoder;
 import org.web3j.abi.datatypes.Function;
-import org.web3j.abi.datatypes.Type;
 import org.web3j.crypto.CipherException;
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.RawTransaction;
 import org.web3j.crypto.TransactionEncoder;
 import org.web3j.crypto.WalletUtils;
 import org.web3j.protocol.admin.Admin;
-import org.web3j.protocol.admin.methods.response.PersonalUnlockAccount;
 import org.web3j.protocol.core.DefaultBlockParameterName;
-import org.web3j.protocol.core.methods.request.Transaction;
-import org.web3j.protocol.core.methods.response.EthCall;
 import org.web3j.protocol.core.methods.response.EthGetTransactionCount;
 import org.web3j.protocol.core.methods.response.EthGetTransactionReceipt;
 import org.web3j.protocol.core.methods.response.EthSendTransaction;

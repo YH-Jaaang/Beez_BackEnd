@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.blockb.beez.dto.LoginDto;
-import com.blockb.beez.dto.PassCheckDto;
 import com.blockb.beez.dto.UserDto;
 import com.blockb.beez.dto.response.BaseResponse;
 import com.blockb.beez.dto.response.SingleDataResponse;
@@ -80,8 +79,10 @@ public class UserController {
         return responseEntity;
     }
 
-    //회원 조회
-    @GetMapping("/users")
+    //중복체크
+
+    //회원 조회(privateKey 받을때 빼고 사용 금지)
+    @PostMapping("/users/priv")
     public ResponseEntity findUserByUsername(final Authentication authentication) {
         ResponseEntity responseEntity = null;
         try {

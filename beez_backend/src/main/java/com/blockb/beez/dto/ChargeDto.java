@@ -12,4 +12,5 @@ import lombok.Setter;
 public class ChargeDto {
     private String email;
     private String charge;
+    private String address;
 }

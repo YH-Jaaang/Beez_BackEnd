@@ -7,7 +7,6 @@ import java.util.ArrayList;
 
 import com.blockb.beez.dao.UserDao;
 import com.blockb.beez.dto.LoginDto;
-import com.blockb.beez.dto.PassCheckDto;
 import com.blockb.beez.dto.UserDto;
 import com.blockb.beez.exception.DuplicatedUsernameException;
 import com.blockb.beez.exception.LoginFailedException;

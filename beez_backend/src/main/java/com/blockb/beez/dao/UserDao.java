@@ -4,7 +4,6 @@ import org.apache.ibatis.annotations.Mapper;
 
 import java.util.Optional;
 
-import com.blockb.beez.dto.PassCheckDto;
 import com.blockb.beez.dto.UserDto;
 
 @Mapper
