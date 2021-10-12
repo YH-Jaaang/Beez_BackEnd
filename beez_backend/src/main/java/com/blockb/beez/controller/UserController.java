@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.security.core.Authentication;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +19,7 @@ import com.blockb.beez.dto.response.SingleDataResponse;
 import com.blockb.beez.exception.DuplicatedUsernameException;
 import com.blockb.beez.exception.LoginFailedException;
 import com.blockb.beez.exception.UserNotFoundException;
+import com.blockb.beez.service.ChargeService;
 import com.blockb.beez.service.ResponseService;
 import com.blockb.beez.service.UserService;
 
@@ -36,6 +38,8 @@ public class UserController {
     @Autowired
     UserService userService;
     @Autowired
+    ChargeService chargeService;
+    @Autowired
     ResponseService responseService;
 
     @PostMapping("/login")
@@ -43,6 +47,7 @@ public class UserController {
         //username, password 잘 가져옴.
         ResponseEntity responseEntity = null;
         try {
+
             //토큰생성
             List<String> token = new ArrayList<>();
             token = userService.login(loginDto);
@@ -64,10 +69,11 @@ public class UserController {
     }
     //회원 가입
     @PostMapping("/join")
-    public ResponseEntity join(@RequestBody UserDto userDto) {
+    public ResponseEntity join(@RequestBody UserDto userDto) throws IOException {
         ResponseEntity responseEntity = null;
         try {
             UserDto savedUser = userService.join(userDto);
+            chargeService.ethSend(userDto.getWalletAddress());
             SingleDataResponse<UserDto> response = responseService.getSingleDataResponse(true, "회원가입 성공", savedUser);
 
             responseEntity = ResponseEntity.status(HttpStatus.CREATED).body(response);

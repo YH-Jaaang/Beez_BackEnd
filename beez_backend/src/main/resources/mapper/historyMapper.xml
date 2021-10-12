@@ -3,6 +3,6 @@
 
 <mapper namespace="com.blockb.beez.dao.HistoryDao">
 	<insert id="chargeHistory" parameterType="map">
-		INSERT INTO CHARGE VALUES(CHARGE_SEQ.NEXTVAL, (SELECT user_id FROM MEMBER WHERE wallet_address = #{userAddress}), #{amount}, SYSDATE)
+		INSERT INTO CHARGE VALUES(CHARGE_SEQ.NEXTVAL, (SELECT user_id FROM MEMBER WHERE wallet_address = #{userAddress}), #{amount}, SYSDATE, #{txHash})
     </insert>
 </mapper>

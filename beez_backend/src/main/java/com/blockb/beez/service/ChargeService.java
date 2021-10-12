@@ -67,6 +67,7 @@ public class ChargeService {
         Map<String, String> history = new HashMap<String, String>();
         history.put("userAddress", userAddress);
         history.put("amount", String.valueOf(amount));
+        history.put("txHash", txHash);
         historyDao.chargeHistory(history);
 
         return transaction;

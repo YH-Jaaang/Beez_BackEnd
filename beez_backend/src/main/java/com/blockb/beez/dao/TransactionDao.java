@@ -61,17 +61,25 @@ public class TransactionDao {
             System.out.println(nonce);
             //gasLimit, gasPrice 너무 낮게 설정 X
             BigInteger gasLimit = BigInteger.valueOf(220000);
-            BigInteger gasPrice = Convert.toWei("2", Unit.GWEI).toBigInteger();
+            //BigInteger gasPrice = Convert.toWei("2", Unit.GWEI).toBigInteger();
+            BigInteger maxPriorityFeePerGas = Convert.toWei("2", Unit.GWEI).toBigInteger();
+            BigInteger maxFeePerGas = Convert.toWei("2", Unit.GWEI).toBigInteger();
+            long chainId = 0x3; //ropsten NetWork
+            BigInteger value = BigInteger.valueOf(0);
 
             RawTransaction rawTransaction  = RawTransaction.createTransaction(
-                       nonce,
-                       gasPrice,
+                       chainId,
+                       nonce,   
                        gasLimit,
                        contract,
-                       FunctionEncoder.encode(function));
+                       value,
+                       FunctionEncoder.encode(function),
+                       maxFeePerGas,
+                       maxPriorityFeePerGas);
       
             // 트랜잭션 바이트 서명
-            byte[] signedMessage = TransactionEncoder.signMessage(rawTransaction, credentials);
+            byte[] signedMessage = TransactionEncoder.signMessage(rawTransaction, chainId, credentials);
+
             String hexValue = Numeric.toHexString(signedMessage);
       
             // 트랜잭션 전송
@@ -117,21 +125,26 @@ public class TransactionDao {
             // 받는사람 주소
             String recipientAddress = toAddress;
             // 전송할 wei
-            BigInteger value = Convert.toWei("0.1", Unit.ETHER).toBigInteger();
+            BigInteger value = Convert.toWei("1", Unit.ETHER).toBigInteger();
             // 가스비 설정
             BigInteger gasLimit = BigInteger.valueOf(21000);
-            BigInteger gasPrice = Convert.toWei("2", Unit.GWEI).toBigInteger();
+            //BigInteger gasPrice = Convert.toWei("2", Unit.GWEI).toBigInteger();
+            BigInteger maxPriorityFeePerGas = Convert.toWei("2", Unit.GWEI).toBigInteger();
+            BigInteger maxFeePerGas = Convert.toWei("2", Unit.GWEI).toBigInteger();
+            long chainId = 0x3; //ropsten NetWork
       
             // 3. rawTransaction 생성
             RawTransaction rawTransaction  = RawTransaction.createEtherTransaction(
+                       chainId,
                        nonce,
-                       gasPrice,
                        gasLimit,
                        recipientAddress,
-                       value);
+                       value,
+                       maxPriorityFeePerGas,
+                       maxFeePerGas);
       
             // 트랜잭션 바이트 서명
-            byte[] signedMessage = TransactionEncoder.signMessage(rawTransaction, credentials);
+            byte[] signedMessage = TransactionEncoder.signMessage(rawTransaction, chainId, credentials);
             String hexValue = Numeric.toHexString(signedMessage);
       
             // 트랜잭션 전송
