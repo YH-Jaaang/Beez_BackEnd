@@ -63,6 +63,9 @@ public class ChargeService {
         // 7. getReceipt
         transactionDao.getReceipt(txHash);
 
+        // int incentiveCheck = 144000;
+
+        // if(amount+incentiveCheck)
         // 8. DB CHARGE HISTORY 남기기
         Map<String, String> history = new HashMap<String, String>();
         history.put("userAddress", userAddress);
