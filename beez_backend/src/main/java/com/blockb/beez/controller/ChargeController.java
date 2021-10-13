@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.web3j.protocol.exceptions.TransactionException;
 
 
 
@@ -37,7 +38,7 @@ public class ChargeController {
 
     //유저 토큰 충전
     @PostMapping("/charge/amount")
-    public ResponseEntity join(@RequestBody ChargeDto chargeDto) throws IOException, ExecutionException, InterruptedException {
+    public ResponseEntity join(@RequestBody ChargeDto chargeDto) throws IOException, ExecutionException, InterruptedException,TransactionException {
         ResponseEntity responseEntity = null;
         try {
             //String address = addressService.userLogin(chargeDto.getEmail());

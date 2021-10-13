@@ -1,5 +1,6 @@
 package com.blockb.beez.dao;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.blockb.beez.dto.AddressDto;
@@ -11,7 +12,9 @@ import java.math.BigInteger;
 import org.springframework.stereotype.Component;
 
 import org.web3j.abi.FunctionEncoder;
+import org.web3j.abi.FunctionReturnDecoder;
 import org.web3j.abi.datatypes.Function;
+import org.web3j.abi.datatypes.Type;
 import org.web3j.crypto.CipherException;
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.RawTransaction;
@@ -19,6 +22,8 @@ import org.web3j.crypto.TransactionEncoder;
 import org.web3j.crypto.WalletUtils;
 import org.web3j.protocol.admin.Admin;
 import org.web3j.protocol.core.DefaultBlockParameterName;
+import org.web3j.protocol.core.methods.request.Transaction;
+import org.web3j.protocol.core.methods.response.EthCall;
 import org.web3j.protocol.core.methods.response.EthGetTransactionCount;
 import org.web3j.protocol.core.methods.response.EthGetTransactionReceipt;
 import org.web3j.protocol.core.methods.response.EthSendTransaction;
@@ -45,6 +50,29 @@ public class TransactionDao {
         web3j = Admin.build(new HttpService("https://ropsten.infura.io/v3/bfe7dce5767341bb8a9d21d0146b8624"));
     }
 
+    public Object ethCall(String userAddress, Function function) throws IOException {
+
+        //2. transaction 제작
+        Transaction transaction = Transaction.createEthCallTransaction(
+            userAddress,
+            contract,
+            FunctionEncoder.encode(function)
+        );
+                                                                                                                                        
+        //3. ethereum 호출후 결과 가져오기
+        EthCall ethCall = web3j.ethCall(transaction, DefaultBlockParameterName.LATEST).send();
+
+        //4. 결과값 decode
+        List<Type> decode = FunctionReturnDecoder.decode(ethCall.getResult(),
+                                                            function.getOutputParameters());
+
+        // System.out.println("ethCall.getResult() = " + ethCall.getResult());
+        // System.out.println("getValue = " + decode.get(0).getValue());
+        // System.out.println("getType = " + decode.get(0).getTypeAsString());
+
+        return decode.get(0).getValue();
+        
+    }
     /* ########트랜젝션 생성하기######## */
     public String ethSendTransaction(Function function, String privateKey) throws IOException, InterruptedException {
         //private키를 통해서 address값 가져오기
