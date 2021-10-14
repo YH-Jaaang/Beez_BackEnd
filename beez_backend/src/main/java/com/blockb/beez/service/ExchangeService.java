@@ -8,10 +8,11 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import com.blockb.beez.dao.HistoryDao;
+import com.blockb.beez.dao.ChargeDao;
 import com.blockb.beez.dao.TransactionDao;
 import com.blockb.beez.dao.UserDao;
 import com.blockb.beez.dto.AddressDto;
+import com.blockb.beez.dto.ContractCADto;
 import com.blockb.beez.dto.UserDto;
 import com.blockb.beez.exception.UserNotFoundException;
 
@@ -25,11 +26,10 @@ import org.web3j.abi.datatypes.generated.Uint256;
 @Service
 public class ExchangeService {
     private TransactionDao transactionDao;
-    @Autowired
-    HistoryDao historyDao;
+
     @Autowired
     UserDao userDao;
-    AddressDto addressDto = new AddressDto();
+    ContractCADto addressDto = new ContractCADto();
 
     public ExchangeService(TransactionDao transactionDao) {
         this.transactionDao = transactionDao;

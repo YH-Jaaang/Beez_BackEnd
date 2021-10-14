@@ -10,10 +10,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
-import com.blockb.beez.dao.HistoryDao;
+import com.blockb.beez.dao.ChargeDao;
 import com.blockb.beez.dao.TransactionDao;
 import com.blockb.beez.dao.UserDao;
 import com.blockb.beez.dto.AddressDto;
+import com.blockb.beez.dto.ContractCADto;
 import com.blockb.beez.dto.UserDto;
 import com.blockb.beez.exception.UserNotFoundException;
 
@@ -29,10 +30,10 @@ import org.web3j.abi.datatypes.generated.Uint128;
 public class WithdrawalService {
     private TransactionDao transactionDao;
     @Autowired
-    HistoryDao historyDao;
-    @Autowired
     UserDao userDao;
-    AddressDto addressDto = new AddressDto();
+    @Autowired
+    ChargeDao chargeDao;
+    ContractCADto addressDto = new ContractCADto();
 
     public WithdrawalService(TransactionDao transactionDao) {
         this.transactionDao = transactionDao;
@@ -61,7 +62,7 @@ public class WithdrawalService {
         history.put("userAddress", userAddress);
         history.put("amount", String.valueOf(amount));
         history.put("txHash", txHash);
-        historyDao.withdrawalHistory(history);
+        chargeDao.withdrawalHistory(history);
 
         return transaction;
     }
