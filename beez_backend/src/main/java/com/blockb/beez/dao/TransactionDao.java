@@ -31,9 +31,7 @@ import org.web3j.utils.Convert.Unit;
 
 @Component
 public class TransactionDao { 
-    AddressDto addressDto = new AddressDto();
-
-    private String contract = addressDto.getWonTokenCA();
+    
     String walletPassword = "Blockbbeez1101";
     String walletDirectory = "wallets";
     String walletName ="UTC--2021-09-30T04-17-22.503Z--e96864b245de769fcc64c1e9f4466a0caad526c5";
@@ -46,7 +44,7 @@ public class TransactionDao {
     }
 
     /* ########트랜젝션 생성하기######## */
-    public String ethSendTransaction(Function function, String privateKey) throws IOException, InterruptedException {
+    public String ethSendTransaction(Function function, String contract) throws IOException, InterruptedException {
         //private키를 통해서 address값 가져오기
         Credentials credentials = null;
         String transactionHash = null;

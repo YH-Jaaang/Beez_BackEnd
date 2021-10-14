@@ -5,4 +5,8 @@
 	<insert id="chargeHistory" parameterType="map">
 		INSERT INTO CHARGE VALUES(CHARGE_SEQ.NEXTVAL, (SELECT user_id FROM MEMBER WHERE wallet_address = #{userAddress}), #{amount}, SYSDATE, #{txHash})
     </insert>
+
+	<insert id="withdrawalHistory" parameterType="map">
+		INSERT INTO WITHDRAW VALUES(WITHDRAW_SEQ.NEXTVAL, (SELECT user_id FROM MEMBER WHERE wallet_address = #{userAddress}), #{amount}, SYSDATE, #{txHash})
+    </insert>
 </mapper>
