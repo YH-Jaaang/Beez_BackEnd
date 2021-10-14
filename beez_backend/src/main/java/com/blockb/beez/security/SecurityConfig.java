@@ -47,6 +47,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/*/login", "/*/join").permitAll() //일단 charge는 권한 부여(추후 제거)
                 .antMatchers(HttpMethod.POST,"/api/charge/*").hasRole("USER")
                 .antMatchers(HttpMethod.POST,"/api/pass/*").hasRole("USER")
+                .antMatchers(HttpMethod.POST,"/api/exchange/*").hasRole("STORE")
+                .antMatchers(HttpMethod.POST,"/api/withdrawal/*").hasRole("STORE")
                 // .antMatchers(HttpMethod.POST,"/api/charge/*").hasRole("STORE")
                 .anyRequest().authenticated() //authenticated()
 

@@ -74,7 +74,7 @@ public class TransactionDao {
         
     }
     /* ########트랜젝션 생성하기######## */
-    public String ethSendTransaction(Function function, String privateKey) throws IOException, InterruptedException {
+    public String ethSendTransaction(Function function, String contract) throws IOException, InterruptedException {
         //private키를 통해서 address값 가져오기
         Credentials credentials = null;
         String transactionHash = null;

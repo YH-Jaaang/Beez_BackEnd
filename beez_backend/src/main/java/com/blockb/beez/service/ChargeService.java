@@ -46,12 +46,13 @@ public class ChargeService {
     //유저 토큰 충전
     public List<String> chargeCheck(String userAddress, int amount) throws IOException, ExecutionException, InterruptedException, TransactionException {
         
+        String contract = addressDto.getWonTokenCA();
         Function function = new Function("chargeCheck",
                                          Arrays.asList(new Address(userAddress), new Uint128(amount)),
                                          Collections.emptyList());
 
         // 2. sendTransaction
-        String txHash = transactionDao.ethSendTransaction(function, null);
+        String txHash = transactionDao.ethSendTransaction(function, contract);
         
         //return Hash값
         List<String> transaction = new ArrayList<>();

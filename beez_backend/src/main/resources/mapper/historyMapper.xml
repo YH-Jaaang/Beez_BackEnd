@@ -11,4 +11,8 @@
 		WHERE user_id = #{userId}
 		order by id desc
 	</select>
+
+	<insert id="withdrawalHistory" parameterType="map">
+		INSERT INTO WITHDRAW VALUES(WITHDRAW_SEQ.NEXTVAL, (SELECT user_id FROM MEMBER WHERE wallet_address = #{userAddress}), #{amount}, SYSDATE, #{txHash})
+    </insert>
 </mapper>

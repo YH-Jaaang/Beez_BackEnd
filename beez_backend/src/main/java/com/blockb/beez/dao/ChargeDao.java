@@ -13,4 +13,6 @@ import org.springframework.stereotype.Repository;
 public interface ChargeDao {
     public void chargeHistory(Map<String, String> map);
     public List<HistoryDto> historyList(Long userId);
+    // public void exchangeHistory(Map<String, String> map);
+    public void withdrawalHistory(Map<String, String> map);
 }
