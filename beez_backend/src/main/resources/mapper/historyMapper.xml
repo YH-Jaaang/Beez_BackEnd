@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.blockb.beez.dao.HistoryDao">
+<mapper namespace="com.blockb.beez.dao.ChargeDao">
 	<insert id="chargeHistory" parameterType="map">
 		INSERT INTO CHARGE VALUES(CHARGE_SEQ.NEXTVAL, (SELECT user_id FROM MEMBER WHERE wallet_address = #{userAddress}), #{chargeAmount}, #{chargeInc}, #{txHash}, SYSDATE+9/24)
     </insert>
