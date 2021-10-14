@@ -2,13 +2,14 @@ package com.blockb.beez.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import com.blockb.beez.dto.ChargeDto;
-
+import com.blockb.beez.dto.HistoryDto;
 import com.blockb.beez.dto.UserDto;
 import com.blockb.beez.service.ChargeService;
 import com.blockb.beez.dto.response.BaseResponse;
@@ -35,10 +36,9 @@ public class ChargeController {
     ChargeService chargeService;
     @Autowired
     ResponseService responseService;
-
     //유저 토큰 충전
     @PostMapping("/charge/amount")
-    public ResponseEntity join(@RequestBody ChargeDto chargeDto) throws IOException, ExecutionException, InterruptedException,TransactionException {
+    public ResponseEntity charge(@RequestBody ChargeDto chargeDto) throws IOException, ExecutionException, InterruptedException,TransactionException {
         ResponseEntity responseEntity = null;
         try {
             //String address = addressService.userLogin(chargeDto.getEmail());
@@ -57,7 +57,7 @@ public class ChargeController {
         return responseEntity;
     }
 
-    //회원 계좌 번호
+    //유저 계좌 번호 출력
     @PostMapping("/charge/account")
     public ResponseEntity findByUserAccount(@RequestBody ChargeDto chargeDto) {
         ResponseEntity responseEntity = null;
@@ -76,6 +76,27 @@ public class ChargeController {
          return responseEntity;
     }
 
+    //유저 History 출력
+    @PostMapping("/history/list")
+    public ResponseEntity historyList(final Authentication authentication) throws IOException, ExecutionException, InterruptedException {
+        ResponseEntity responseEntity = null;
+        try {
+                
+            Long userId = ((UserDto) authentication.getPrincipal()).getUserId();
+    
+            List<HistoryDto> historyList = chargeService.historyList(userId);
+    
+            SingleDataResponse<List<HistoryDto>> response = responseService.getSingleDataResponse(true, "충전List 출력 성공", historyList);
+    
+            responseEntity = ResponseEntity.status(HttpStatus.CREATED).body(response);
+    
+        } catch (DuplicatedUsernameException exception) {
+            BaseResponse response = responseService.getBaseResponse(false, exception.getMessage());
+    
+            responseEntity = ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+        return responseEntity;
+    }
     //회원가입시 이더 전송
     // @PostMapping("/ethSend")
     // public String ethSend(@RequestParam String toAddress) throws IOException{

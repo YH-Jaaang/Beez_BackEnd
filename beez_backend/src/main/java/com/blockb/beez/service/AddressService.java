@@ -1,22 +1,22 @@
-// package com.blockb.beez.service;
+package com.blockb.beez.service;
 
-// import com.blockb.beez.dao.AddressDao;
+import java.util.Collection;
+import java.util.List;
 
-// import org.springframework.beans.factory.annotation.Autowired;
-// import org.springframework.stereotype.Service;
+import com.blockb.beez.dao.AddressDao;
+import com.blockb.beez.dto.AddressDto;
+import com.blockb.beez.dto.AddressListDto;
 
-// @Service
-// public class AddressService {
-//     @Autowired
-//     AddressDao addressDao;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public class AddressService {
+    @Autowired
+    AddressDao addressDao;
     
-//     public String userLogin(String email){
-//         String loginDb = addressDao.userLogin(email);
-//         if(loginDb == null){
-//             return "fail";
-//         }
-//         else{
-//             return loginDb;
-//         }
-//     }
-// }
+    public List<AddressDto> findAddress(AddressListDto address){
+        System.out.println(address);
+        return addressDao.findAddress(address);
+    }
+}

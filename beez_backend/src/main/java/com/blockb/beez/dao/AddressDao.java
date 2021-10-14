@@ -1,10 +1,16 @@
-// package com.blockb.beez.dao;
+package com.blockb.beez.dao;
 
-// import org.apache.ibatis.annotations.Mapper;
-// import org.springframework.stereotype.Repository;
+import java.util.Collection;
+import java.util.List;
 
-// @Mapper
-// @Repository
-// public interface AddressDao {
-//     public String userLogin(String email);
-// }
+import com.blockb.beez.dto.AddressDto;
+import com.blockb.beez.dto.AddressListDto;
+
+import org.apache.ibatis.annotations.Mapper;
+import org.springframework.stereotype.Repository;
+
+@Mapper
+@Repository
+public interface AddressDao {
+    public List<AddressDto> findAddress(AddressListDto address);
+}

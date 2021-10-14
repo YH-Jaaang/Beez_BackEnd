@@ -2,10 +2,11 @@ package com.blockb.beez.service;
 
 import java.util.concurrent.ExecutionException;
 
-import com.blockb.beez.dao.HistoryDao;
+import com.blockb.beez.dao.ChargeDao;
 import com.blockb.beez.dao.TransactionDao;
 import com.blockb.beez.dao.UserDao;
-import com.blockb.beez.dto.AddressDto;
+import com.blockb.beez.dto.ContractCADto;
+import com.blockb.beez.dto.HistoryDto;
 import com.blockb.beez.dto.UserDto;
 import com.blockb.beez.exception.UserNotFoundException;
 
@@ -32,10 +33,10 @@ import org.web3j.protocol.exceptions.TransactionException;
 public class ChargeService { 
     private TransactionDao transactionDao;
     @Autowired
-    HistoryDao historyDao;
+    ChargeDao chargeDao;
     @Autowired
     UserDao userDao;
-    AddressDto addressDto = new AddressDto();
+    ContractCADto addressDto = new ContractCADto();
 
     public ChargeService(TransactionDao transactionDao)
     {
@@ -71,13 +72,20 @@ public class ChargeService {
         history.put("chargeAmount", String.valueOf(amount));
         history.put("chargeInc", String.valueOf(incentiveCheck));
         history.put("txHash", txHash);
-        historyDao.chargeHistory(history);
+        chargeDao.chargeHistory(history);
 
         return transaction;
     }
+    
+    //유저 계좌 번호 출력
     public UserDto findByUserAccount(String email) {
         return userDao.findByUserAccount(email)
                 .orElseThrow(() -> new UserNotFoundException("없는 유저입니다."));
+    }
+
+    //유저 History 출력
+    public List<HistoryDto> historyList(Long userId) {
+        return chargeDao.historyList(userId);
     }
 
     //회원가입시 이더 전송

@@ -3,7 +3,7 @@ package com.blockb.beez.dao;
 import java.util.List;
 import java.util.Optional;
 
-import com.blockb.beez.dto.AddressDto;
+import com.blockb.beez.dto.ContractCADto;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,7 +36,7 @@ import org.web3j.utils.Convert.Unit;
 
 @Component
 public class TransactionDao { 
-    AddressDto addressDto = new AddressDto();
+    ContractCADto addressDto = new ContractCADto();
 
     private String contract = addressDto.getWonTokenCA();
     String walletPassword = "Blockbbeez1101";

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 
 @Mapper
 @Repository
-public interface HistoryDao {
+public interface ChargeDao {
     public void chargeHistory(Map<String, String> map);
     public List<HistoryDto> historyList(Long userId);
 }

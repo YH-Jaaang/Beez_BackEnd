@@ -1,7 +1,5 @@
 package com.blockb.beez.dto;
 
-import java.util.List;
-
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
@@ -17,8 +15,6 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonNaming(value = PropertyNamingStrategy.SnakeCaseStrategy.class)
-public class AddressDto {
-    private  List<AddressListDto> walletAddress;
-    private String nickName;
-
+public class AddressListDto {
+    private String address;
 }
