@@ -36,7 +36,7 @@ public class ChargeController {
     ResponseService responseService;
 
     //유저 토큰 충전
-    @PostMapping("/charge/amount")
+    @PostMapping("/charge/amount")  
     public ResponseEntity join(@RequestBody ChargeDto chargeDto) throws IOException, ExecutionException, InterruptedException {
         ResponseEntity responseEntity = null;
         try {
