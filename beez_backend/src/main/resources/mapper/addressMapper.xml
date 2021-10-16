@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.blockb.beez.dao.AddressDao">
-    <select id="findAddress" resultType="com.blockb.beez.dto.AddressDto">
-		SELECT nickname nickName FROM MEMBER WHERE WALLET_ADDRESS = #{address}
+    <select id="findAddress" resultType="String">
+		SELECT nickname nickName FROM MEMBER WHERE LOWER(WALLET_ADDRESS) = LOWER(#{address})
 	</select>
 </mapper>

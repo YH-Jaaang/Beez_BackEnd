@@ -58,16 +58,11 @@ public class ChargeService {
         List<String> transaction = new ArrayList<>();
         transaction.add(txHash);
 
-        // 7. getReceipt
-        transactionDao.getReceipt(txHash);
-
+        int txLength = transactionDao.getReceipt(txHash).getLogs().get(1).getData().length();
+        // 7. getReceipt(DB)
+        int incentiveCheck = Integer.parseInt(transactionDao.getReceipt(txHash).getLogs().get(1).getData().substring(129, txLength),16);
+        
         // 8. DB CHARGE HISTORY 남기기
-        Function function2 = new Function("incentiveCheck",
-                                        Arrays.asList(new Address(userAddress)),
-                                        Arrays.asList(new TypeReference<Uint256>() {}));
-
-        int incentiveCheck =  ((BigInteger)transactionDao.ethCall(userAddress, function2)).intValue();
-
         Map<String, String> history = new HashMap<String, String>();
         history.put("userAddress", userAddress);
         history.put("chargeAmount", String.valueOf(amount));

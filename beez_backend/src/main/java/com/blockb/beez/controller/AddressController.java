@@ -37,11 +37,10 @@ public class AddressController {
     public ResponseEntity findAddress(@RequestBody AddressDto address) throws IOException, ExecutionException, InterruptedException {
         ResponseEntity responseEntity = null;
         try {
-            System.out.println(address.toString()+"띵"+address.getWalletAddress().toString());
             //List<HistoryDto> historyList = historyService.historyList(userId);
-            List<AddressDto> findAddress = addressService.findAddress((AddressListDto) address.getWalletAddress());
+            List<String> findAddress = addressService.findAddress(address.getWalletAddress());
 
-            SingleDataResponse<Collection<AddressDto>> response = responseService.getSingleDataResponse(true, "충전List 출력 성공", findAddress);
+            SingleDataResponse<List<String>> response = responseService.getSingleDataResponse(true, "충전List 출력 성공", findAddress);
 
             responseEntity = ResponseEntity.status(HttpStatus.CREATED).body(response);
 

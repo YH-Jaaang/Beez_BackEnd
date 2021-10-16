@@ -20,5 +20,4 @@ import lombok.ToString;
 public class AddressDto {
     private  List<AddressListDto> walletAddress;
     private String nickName;
-
 }

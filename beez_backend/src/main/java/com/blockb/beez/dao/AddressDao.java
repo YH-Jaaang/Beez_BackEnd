@@ -12,5 +12,5 @@ import org.springframework.stereotype.Repository;
 @Mapper
 @Repository
 public interface AddressDao {
-    public List<AddressDto> findAddress(AddressListDto address);
+    public String findAddress(String address);
 }

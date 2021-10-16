@@ -24,6 +24,6 @@
     </update>
     <!-- 회원 보안 Password 여부 확인 없는 경우 비밀번호 저장 -->
     <insert id="passSave" parameterType="com.blockb.beez.dto.PassCheckDto">
-        INSERT INTO PASS VALUES(PASS_SEQ.NEXTVAL, #{userId}, #{passwordCheck}, 0)
+        INSERT INTO PASS VALUES(#{userId}, #{passwordCheck}, 0)
     </insert>
 </mapper>
