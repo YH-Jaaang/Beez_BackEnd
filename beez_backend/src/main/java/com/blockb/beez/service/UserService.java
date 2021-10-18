@@ -40,7 +40,6 @@ public class UserService {
                 .orElseThrow(() -> new LoginFailedException("잘못된 아이디입니다"));
         //db에 아이디가 존재하고 비밀번호가 잘못 됐을 경우, 노티 출력
         if (!passwordEncoder.matches(loginDto.getPassword(), userDto.getPassword())) {
-            //System.out.println(passwordEncoder.encode("6003wkd"));  //비밀번호 암호화해서 확인. $2a$10$mr8eta5WTsGvrdZELOGX7OWHUIdJMR2Fdab0RuXD3AtCzIpLFoKQ. - 암호화
             throw new LoginFailedException("잘못된 비밀번호입니다");
         }
         if (!("ROLE_"+loginDto.getRole()).equals(userDto.getRole())) {

@@ -38,7 +38,6 @@ import org.web3j.utils.Convert.Unit;
 public class TransactionDao { 
     ContractCADto addressDto = new ContractCADto();
 
-    private String contract = addressDto.getWonTokenCA();
     String walletPassword = "Blockbbeez1101";
     String walletDirectory = "wallets";
     String walletName ="UTC--2021-09-30T04-17-22.503Z--e96864b245de769fcc64c1e9f4466a0caad526c5";

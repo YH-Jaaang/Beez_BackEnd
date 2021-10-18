@@ -8,10 +8,8 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import com.blockb.beez.dao.ChargeDao;
 import com.blockb.beez.dao.TransactionDao;
 import com.blockb.beez.dao.UserDao;
-import com.blockb.beez.dto.AddressDto;
 import com.blockb.beez.dto.ContractCADto;
 import com.blockb.beez.dto.UserDto;
 import com.blockb.beez.exception.UserNotFoundException;
@@ -20,7 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.web3j.abi.datatypes.Address;
 import org.web3j.abi.datatypes.Function;
-import org.web3j.abi.datatypes.generated.Uint256;
+import org.web3j.abi.datatypes.generated.Uint128;
 
 
 @Service
@@ -38,9 +36,9 @@ public class ExchangeService {
     //소상공인 토큰 환전
     public List<String> exchange(String userAddress, int amount) throws IOException, ExecutionException, InterruptedException {
         
-        String contract = addressDto.getBeezTokenCA();
+        String contract = addressDto.getPaymentCA();
         Function function = new Function("exchange",
-                                         Arrays.asList(new Address(userAddress), new Uint256(amount)),
+                                         Arrays.asList(new Address(userAddress), new Uint128(amount)),
                                          Collections.emptyList());
         
         // 2. sendTransaction
