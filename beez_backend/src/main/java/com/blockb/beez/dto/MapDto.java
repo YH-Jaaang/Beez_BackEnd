@@ -12,7 +12,8 @@ import lombok.ToString;
 @Setter
 @ToString
 public class MapDto {
-    private String storeName;
+    private String nickName;
     private double lat;
     private double lon;
+    private double distance;
 }

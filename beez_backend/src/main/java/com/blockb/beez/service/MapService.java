@@ -14,8 +14,8 @@ public class MapService {
     @Autowired
     MapDao mapdao;
     
-    public List<MapDto> getStoreList(){
-        return mapdao.getStoreList();   
+    public List<MapDto> getStoreList(double mylat, double  mylon){
+        return mapdao.getStoreList( mylat,  mylon);   
        
 }
 }

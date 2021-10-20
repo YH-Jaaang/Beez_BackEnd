@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface MapDao {
 
- public List<MapDto> getStoreList();
+ public List<MapDto> getStoreList(double mylat, double mylon);
 
 
 }
