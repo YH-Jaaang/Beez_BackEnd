@@ -10,12 +10,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
-import com.blockb.beez.dao.ChargeDao;
 import com.blockb.beez.dao.TransactionDao;
 import com.blockb.beez.dao.UserDao;
-import com.blockb.beez.dto.AddressDto;
+import com.blockb.beez.dao.WithdrawalDao;
 import com.blockb.beez.dto.ContractCADto;
 import com.blockb.beez.dto.UserDto;
+import com.blockb.beez.dto.WithdrawalHistoryDto;
 import com.blockb.beez.exception.UserNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,15 +24,13 @@ import org.web3j.abi.datatypes.Address;
 import org.web3j.abi.datatypes.Function;
 import org.web3j.abi.datatypes.generated.Uint128;
 
-
-
 @Service
 public class WithdrawalService {
     private TransactionDao transactionDao;
     @Autowired
     UserDao userDao;
     @Autowired
-    ChargeDao chargeDao;
+    WithdrawalDao withDrawalDao;
     ContractCADto addressDto = new ContractCADto();
 
     public WithdrawalService(TransactionDao transactionDao) {
@@ -62,12 +60,17 @@ public class WithdrawalService {
         history.put("userAddress", userAddress);
         history.put("amount", String.valueOf(amount));
         history.put("txHash", txHash);
-        chargeDao.withdrawalHistory(history);
+        withDrawalDao.withdrawalHistory(history);
 
         return transaction;
     }
+    //소상공인 계좌 찾기
     public UserDto findByUserAccount(String email) {
         return userDao.findByUserAccount(email)
                 .orElseThrow(() -> new UserNotFoundException("없는 유저입니다."));
-    } 
+    }
+    //소상공인 출금 내역 list
+    public List<WithdrawalHistoryDto> withdrawHistoryList(Long userId) {
+        return withDrawalDao.withdrawHistoryList(userId);
+    }
 }
