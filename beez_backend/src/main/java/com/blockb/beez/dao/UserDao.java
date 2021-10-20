@@ -12,6 +12,5 @@ public interface UserDao {
     Optional<UserDto> findUserByUsername(String email);
     Optional<UserDto> findByUserId(Long userId);
     Optional<UserDto> findByUserAccount(String email);
-    int findUserByEmail(String email);
     void save(UserDto userDto);
 }

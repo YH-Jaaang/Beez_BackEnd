@@ -88,8 +88,4 @@ public class UserService {
         return userDao.findByUserId(userId)
                 .orElseThrow(() -> new UserNotFoundException("없는 유저입니다."));
     }
-    //중복 조회
-    public int findUserByEmail(String email) throws Exception {
-        return userDao.findUserByEmail(email);
-    }
 }

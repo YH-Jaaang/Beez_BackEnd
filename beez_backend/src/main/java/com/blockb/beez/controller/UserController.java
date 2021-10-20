@@ -86,16 +86,6 @@ public class UserController {
     }
 
     //중복체크
-    @PostMapping("/join/check")
-    public int checkEmail(@RequestBody UserDto userDto) throws Exception {
-        String email = userDto.getEmail();
-        // System.out.println(email);
-
-        int emailCheck = userService.findUserByEmail(email);
-        // System.out.println(emailCheck);
-
-        return emailCheck;
-    }
 
     //회원 조회(privateKey 받을때 빼고 사용 금지)
     @PostMapping("/users/priv")

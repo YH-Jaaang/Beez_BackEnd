@@ -32,9 +32,4 @@
         FROM MEMBER
         WHERE email = #{email}
     </select>
-
-    <select id="findUserByEmail" parameterType="com.blockb.beez.dto.UserDto" resultType="int">
-        SELECT COUNT(*) FROM MEMBER
-        WHERE EMAIL = #{email}
-    </select>
 </mapper>
