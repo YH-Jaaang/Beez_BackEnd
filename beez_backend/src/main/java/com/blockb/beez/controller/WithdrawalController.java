@@ -81,14 +81,14 @@ public class WithdrawalController {
 
     //소상공인 출금 History 출력
     @PostMapping("/withdrawal/historylist")
-    public ResponseEntity historyList(final Authentication authentication) throws IOException, ExecutionException, InterruptedException {
+    public ResponseEntity historyList(final Authentication authentication, @RequestBody WithdrawalHistoryDto date) throws IOException, ExecutionException, InterruptedException {
         
         ResponseEntity responseEntity = null;
         try {
-                
+
             Long userId = ((UserDto) authentication.getPrincipal()).getUserId();
     
-            List<WithdrawalHistoryDto> historyList = withdrawalService.withdrawHistoryList(userId);
+            List<WithdrawalHistoryDto> historyList = withdrawalService.withdrawHistoryList(userId, date.getStartDate(), date.getEndDate());
     
             SingleDataResponse<List<WithdrawalHistoryDto>> response = responseService.getSingleDataResponse(true, "충전List 출력 성공", historyList);
     

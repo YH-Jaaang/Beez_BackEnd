@@ -15,4 +15,6 @@ public class HistoryDto {
     private String chargeInc;
     private String txHash;
     private String chargeDate;
+    private String startDate;
+    private String endDate;
 }

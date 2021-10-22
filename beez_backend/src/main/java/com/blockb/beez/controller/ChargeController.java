@@ -77,13 +77,13 @@ public class ChargeController {
 
     //유저 History 출력
     @PostMapping("/charge/historylist")
-    public ResponseEntity historyList(final Authentication authentication) throws IOException, ExecutionException, InterruptedException {
+    public ResponseEntity historyList(final Authentication authentication, @RequestBody HistoryDto date) throws IOException, ExecutionException, InterruptedException {
         ResponseEntity responseEntity = null;
         try {
                 
             Long userId = ((UserDto) authentication.getPrincipal()).getUserId();
     
-            List<HistoryDto> historyList = chargeService.historyList(userId);
+            List<HistoryDto> historyList = chargeService.historyList(userId, date.getStartDate(), date.getEndDate());
     
             SingleDataResponse<List<HistoryDto>> response = responseService.getSingleDataResponse(true, "충전List 출력 성공", historyList);
     

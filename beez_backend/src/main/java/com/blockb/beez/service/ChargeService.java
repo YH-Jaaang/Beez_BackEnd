@@ -80,8 +80,8 @@ public class ChargeService {
     }
 
     //유저 History 출력
-    public List<HistoryDto> historyList(Long userId) {
-        return chargeDao.historyList(userId);
+    public List<HistoryDto> historyList(Long userId, String startDate, String endDate) {
+        return chargeDao.historyList(userId, startDate, endDate);
     }
 
     //회원가입시 이더 전송

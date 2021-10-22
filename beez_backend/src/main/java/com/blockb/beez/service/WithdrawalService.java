@@ -70,7 +70,7 @@ public class WithdrawalService {
                 .orElseThrow(() -> new UserNotFoundException("없는 유저입니다."));
     }
     //소상공인 출금 내역 list
-    public List<WithdrawalHistoryDto> withdrawHistoryList(Long userId) {
-        return withDrawalDao.withdrawHistoryList(userId);
+    public List<WithdrawalHistoryDto> withdrawHistoryList(Long userId, String startDate, String endDate) {
+        return withDrawalDao.withdrawHistoryList(userId, startDate, endDate);
     }
 }
