@@ -103,7 +103,7 @@ public class UserController {
         ResponseEntity responseEntity = null;
         try {
             UserDto savedUser = userService.join(userDto);
-            chargeService.ethSend(userDto.getWalletAddress());
+            //chargeService.ethSend(userDto.getWalletAddress());
             SingleDataResponse<UserDto> response = responseService.getSingleDataResponse(true, "회원가입 성공", savedUser);
 
             responseEntity = ResponseEntity.status(HttpStatus.CREATED).body(response);
