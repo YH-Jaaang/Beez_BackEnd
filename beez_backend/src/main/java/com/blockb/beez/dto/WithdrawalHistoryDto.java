@@ -14,4 +14,6 @@ public class WithdrawalHistoryDto {
     private String amount;
     private String txHash;
     private String withdrawDate;
+    private String startDate;
+    private String endDate;
 }

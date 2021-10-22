@@ -13,5 +13,5 @@ import org.springframework.stereotype.Repository;
 public interface WithdrawalDao {
     // public void exchangeHistory(Map<String, String> map);
     public void withdrawalHistory(Map<String, String> map);
-    public List<WithdrawalHistoryDto> withdrawHistoryList(Long userId);
+    public List<WithdrawalHistoryDto> withdrawHistoryList(Long userId, String startDate, String endDate);
 }
