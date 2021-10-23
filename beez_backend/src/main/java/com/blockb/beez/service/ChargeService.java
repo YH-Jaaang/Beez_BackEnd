@@ -60,8 +60,8 @@ public class ChargeService {
 
         int txLength = transactionDao.getReceipt(txHash).getLogs().get(1).getData().length();
         // 7. getReceipt(DB)
-        int incentiveCheck = Integer.parseInt(transactionDao.getReceipt(txHash).getLogs().get(1).getData().substring(129, txLength),16);
-        
+        int incentiveCheck = Integer.parseInt(transactionDao.getReceipt(txHash).getLogs().get(1).getData().substring(txLength-64, txLength),16);
+
         // 8. DB CHARGE HISTORY 남기기
         Map<String, String> history = new HashMap<String, String>();
         history.put("userAddress", userAddress);
