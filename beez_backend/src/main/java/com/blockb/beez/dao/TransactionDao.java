@@ -66,8 +66,8 @@ public class TransactionDao {
             //gasLimit, gasPrice 너무 낮게 설정 X
             BigInteger gasLimit = BigInteger.valueOf(220000);
             //BigInteger gasPrice = Convert.toWei("2", Unit.GWEI).toBigInteger();
-            BigInteger maxPriorityFeePerGas = Convert.toWei("2", Unit.GWEI).toBigInteger();
-            BigInteger maxFeePerGas = Convert.toWei("2", Unit.GWEI).toBigInteger();
+            BigInteger maxPriorityFeePerGas = Convert.toWei("100", Unit.GWEI).toBigInteger();
+            BigInteger maxFeePerGas = Convert.toWei("100", Unit.GWEI).toBigInteger();
             long chainId = 0x3; //ropsten NetWork
             BigInteger value = BigInteger.valueOf(0);
 
