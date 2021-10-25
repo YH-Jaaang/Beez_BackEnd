@@ -1,6 +1,7 @@
 package com.blockb.beez.dao;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import com.blockb.beez.dto.ContractCADto;
@@ -8,13 +9,14 @@ import com.blockb.beez.dto.ContractCADto;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigInteger;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import org.web3j.abi.FunctionEncoder;
-import org.web3j.abi.FunctionReturnDecoder;
 import org.web3j.abi.datatypes.Function;
-import org.web3j.abi.datatypes.Type;
 import org.web3j.crypto.CipherException;
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.RawTransaction;
@@ -22,8 +24,6 @@ import org.web3j.crypto.TransactionEncoder;
 import org.web3j.crypto.WalletUtils;
 import org.web3j.protocol.admin.Admin;
 import org.web3j.protocol.core.DefaultBlockParameterName;
-import org.web3j.protocol.core.methods.request.Transaction;
-import org.web3j.protocol.core.methods.response.EthCall;
 import org.web3j.protocol.core.methods.response.EthGetTransactionCount;
 import org.web3j.protocol.core.methods.response.EthGetTransactionReceipt;
 import org.web3j.protocol.core.methods.response.EthSendTransaction;
@@ -35,9 +35,10 @@ import org.web3j.utils.Numeric;
 import org.web3j.utils.Convert.Unit;
 
 @Component
-public class TransactionDao { 
+public class TransactionDao {
+    @Autowired
+    nonceCheckDao nonceCheckDao;
     ContractCADto addressDto = new ContractCADto();
-
     String walletPassword = "Blockbbeez1101";
     String walletDirectory = "wallets";
     String walletName ="UTC--2021-09-30T04-17-22.503Z--e96864b245de769fcc64c1e9f4466a0caad526c5";
@@ -50,11 +51,18 @@ public class TransactionDao {
     }
     
     /* ########트랜젝션 생성하기######## */
-    public String ethSendTransaction(Function function, String contract) throws IOException, InterruptedException {
+    public String ethSendTransaction(Function function, String contract, Long userId) throws IOException, InterruptedException {
         //private키를 통해서 address값 가져오기
         Credentials credentials = null;
         String transactionHash = null;
-
+        // 현재 날짜 구하기 (시스템 시계, 시스템 타임존)
+        LocalDateTime date =  LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+        System.out.println(formatter.format(date));
+        int random = (int)(Math.random() * 10000)+1;
+        String nonceReqId = formatter.format(date)+String.valueOf(random)+userId;
+        //map에 넣고 nonce 상태 업데이트
+        Map<String, String> nonceStatus = new HashMap<String, String>();
         try {
             // 1. 지갑을 암호 해독하고 Credential 객체 생성
             credentials = WalletUtils.loadCredentials(walletPassword, walletDirectory+ File.separator + walletName);
@@ -62,7 +70,14 @@ public class TransactionDao {
             // 2. account에 대한 nonce값 가져오기.
             EthGetTransactionCount ethGetTransactionCount = web3j.ethGetTransactionCount(credentials.getAddress(), DefaultBlockParameterName.LATEST).send();
             BigInteger nonce =  ethGetTransactionCount.getTransactionCount();
-            System.out.println(nonce);
+            System.out.println("현재 nonce :"+ nonce);
+            //현재 nonceCheck
+            //생성된 블록 + 현재 pending중인 nonce값 체크
+            BigInteger nonce2 = BigInteger.valueOf(nonce.intValue() + nonceCheckDao.nonceCount());
+            System.out.println("바뀐 nonce :"+nonce2);
+            //NONCE DB에 저장
+            nonceCheckDao.nonceCheck(nonceReqId, String.valueOf(nonce.intValue()));
+
             //gasLimit, gasPrice 너무 낮게 설정 X
             BigInteger gasLimit = BigInteger.valueOf(220000);
             //BigInteger gasPrice = Convert.toWei("2", Unit.GWEI).toBigInteger();
@@ -73,7 +88,7 @@ public class TransactionDao {
 
             RawTransaction rawTransaction  = RawTransaction.createTransaction(
                        chainId,
-                       nonce,   
+                       nonce2,   
                        gasLimit,
                        contract,
                        value,
@@ -101,11 +116,20 @@ public class TransactionDao {
                 System.out.println("checking if transaction " + transactionHash + " is mined....");
                 EthGetTransactionReceipt ethGetTransactionReceiptResp = web3j.ethGetTransactionReceipt(transactionHash).send();
                 transactionReceipt = ethGetTransactionReceiptResp.getTransactionReceipt();
-                Thread.sleep(10000); // Wait 10 sec
+                Thread.sleep(2000); // Wait 10 sec
             } while(!transactionReceipt.isPresent());
-            
+            //nonce status update
+            nonceStatus.put("requestId", nonceReqId);
+            nonceStatus.put("usedNonce",String.valueOf(nonce2.intValue()));
+            nonceStatus.put("status", "success");
+            nonceCheckDao.nonceStausUpdate(nonceStatus);
         } catch (CipherException e) {
             e.printStackTrace();
+            //nonce status update
+            nonceStatus.put("requestId", nonceReqId);
+            nonceStatus.put("usedNonce",String.valueOf(0));
+            nonceStatus.put("status", "fail");
+            nonceCheckDao.nonceStausUpdate(nonceStatus);
         }
 
         //트랙잭션 hash값 전송

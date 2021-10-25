@@ -38,7 +38,7 @@ public class WithdrawalService {
     }
     
     //소상공인 토큰 출금
-    public List<String> withdrawal(String userAddress, int amount) throws IOException, ExecutionException, InterruptedException {
+    public List<String> withdrawal(String userAddress, Long userId, int amount) throws IOException, ExecutionException, InterruptedException {
         
         String contract = addressDto.getWonTokenCA();
         Function function = new Function("withDraw",
@@ -46,7 +46,7 @@ public class WithdrawalService {
                                          Collections.emptyList());
         
         // 2. sendTransaction
-        String txHash = transactionDao.ethSendTransaction(function, contract);
+        String txHash = transactionDao.ethSendTransaction(function, contract, userId);
 
         //return Hash값
         List<String> transaction = new ArrayList<>();

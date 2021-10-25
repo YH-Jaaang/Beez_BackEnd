@@ -38,13 +38,14 @@ public class WithdrawalController {
 
     //소상공인 출금
     @PostMapping("/withdrawal/amount")
-    public ResponseEntity withdrawal(@RequestBody WithdrawalDto withdrawalDto) throws IOException, ExecutionException, InterruptedException {
+    public ResponseEntity withdrawal(final Authentication authentication, @RequestBody WithdrawalDto withdrawalDto) throws IOException, ExecutionException, InterruptedException {
         ResponseEntity responseEntity = null;
         try {
+            Long userId = ((UserDto) authentication.getPrincipal()).getUserId();
 
             System.out.println("address : "+withdrawalDto.getAddress()+"\n"+"id : " + withdrawalDto.getEmail()+"\n"+"withdrawalAmount :" + withdrawalDto.getWithdrawal());
             
-            List<String> withdrawalInfo = withdrawalService.withdrawal(withdrawalDto.getAddress(), Integer.parseInt(withdrawalDto.getWithdrawal()));
+            List<String> withdrawalInfo = withdrawalService.withdrawal(withdrawalDto.getAddress(), userId, Integer.parseInt(withdrawalDto.getWithdrawal()));
             SingleDataResponse<List<String>> response = responseService.getSingleDataResponse(true, "환전 성공", withdrawalInfo);
 
             responseEntity = ResponseEntity.status(HttpStatus.CREATED).body(response);

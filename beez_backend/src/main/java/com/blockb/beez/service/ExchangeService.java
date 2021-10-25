@@ -34,7 +34,7 @@ public class ExchangeService {
     }
 
     //소상공인 토큰 환전
-    public List<String> exchange(String userAddress, int amount) throws IOException, ExecutionException, InterruptedException {
+    public List<String> exchange(String userAddress, Long userId, int amount) throws IOException, ExecutionException, InterruptedException {
         
         String contract = addressDto.getPaymentCA();
         Function function = new Function("exchange",
@@ -42,7 +42,7 @@ public class ExchangeService {
                                          Collections.emptyList());
         
         // 2. sendTransaction
-        String txHash = transactionDao.ethSendTransaction(function, contract);
+        String txHash = transactionDao.ethSendTransaction(function, contract, userId);
 
         //return Hash값
         List<String> transaction = new ArrayList<>();

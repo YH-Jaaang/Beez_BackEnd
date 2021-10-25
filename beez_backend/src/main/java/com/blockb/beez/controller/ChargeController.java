@@ -37,13 +37,14 @@ public class ChargeController {
     ResponseService responseService;
     //유저 토큰 충전
     @PostMapping("/charge/amount")
-    public ResponseEntity charge(@RequestBody ChargeDto chargeDto) throws IOException, ExecutionException, InterruptedException,TransactionException {
+    public ResponseEntity charge(final Authentication authentication, @RequestBody ChargeDto chargeDto) throws IOException, ExecutionException, InterruptedException,TransactionException {
         ResponseEntity responseEntity = null;
         try {
             //String address = addressService.userLogin(chargeDto.getEmail());
+            Long userId = ((UserDto) authentication.getPrincipal()).getUserId();
             System.out.println("address : "+chargeDto.getAddress()+"\n"+"id : " + chargeDto.getEmail()+"\n"+"chargeAmount :" +chargeDto.getCharge());
             
-            List<String> chargeInfo = chargeService.chargeCheck(chargeDto.getAddress(), Integer.parseInt(chargeDto.getCharge()));
+            List<String> chargeInfo = chargeService.chargeCheck(chargeDto.getAddress(), userId, Integer.parseInt(chargeDto.getCharge()));
             SingleDataResponse<List<String>> response = responseService.getSingleDataResponse(true, "충전 성공", chargeInfo);
 
             responseEntity = ResponseEntity.status(HttpStatus.CREATED).body(response);

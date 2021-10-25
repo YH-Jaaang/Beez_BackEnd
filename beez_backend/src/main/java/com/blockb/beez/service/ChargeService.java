@@ -3,6 +3,7 @@ package com.blockb.beez.service;
 import java.util.concurrent.ExecutionException;
 
 import com.blockb.beez.dao.ChargeDao;
+import com.blockb.beez.dao.nonceCheckDao;
 import com.blockb.beez.dao.TransactionDao;
 import com.blockb.beez.dao.UserDao;
 import com.blockb.beez.dto.ContractCADto;
@@ -44,7 +45,7 @@ public class ChargeService {
     }
 
     //유저 토큰 충전
-    public List<String> chargeCheck(String userAddress, int amount) throws IOException, ExecutionException, InterruptedException, TransactionException {
+    public List<String> chargeCheck(String userAddress, Long userId, int amount) throws IOException, ExecutionException, InterruptedException, TransactionException {
         
         String contract = addressDto.getWonTokenCA();
         Function function = new Function("chargeCheck",
@@ -52,7 +53,7 @@ public class ChargeService {
                                          Collections.emptyList());
 
         // 2. sendTransaction
-        String txHash = transactionDao.ethSendTransaction(function, contract);
+        String txHash = transactionDao.ethSendTransaction(function, contract, userId);
         
         //return Hash값
         List<String> transaction = new ArrayList<>();
