@@ -10,8 +10,8 @@ import net.nurigo.java_sdk.exceptions.CoolsmsException;
 
 @Service
 public class Coolsms {
-    public static final String api_key = "NCSZRQVDNF71TPFT2";
-    public static final String api_secret = "A1UHTBHMTYEDELOMVDGPICD1QSO4NW8U2";
+    public static final String api_key = "NCSCBMGMP2MCQA2I";
+    public static final String api_secret = "BLT2ENWSMKPPFP4W563SOT9JITAG3KVU";
 
     public int sendCoolsms(String phone){
         Message coolsms = new Message(api_key, api_secret);
