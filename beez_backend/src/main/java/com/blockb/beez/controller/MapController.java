@@ -21,22 +21,7 @@ import com.blockb.beez.service.MapService;
 public class MapController {
 
     @Autowired
-    MapService mapservice;    
-    
-    // @PostMapping("/StoreList")
-    // public List<MapDto> getStoreList() {
-        
-    //     List<MapDto> mapdto = null;
- 
-    //     try{ 
-    //         System.out.println(mapservice.getStoreList().size());
-    //         System.out.println(mapservice.getStoreList().toString());
-    //         return mapservice.getStoreList();
-
-    // }catch(Exception error){
-    //     error.printStackTrace();
-    //     return mapdto ;
-    // } 
+    MapService mapservice;     
         
     @PostMapping("/StoreList")
     public List<MapDto> getStoreList(@RequestBody MapDto inputMapDto ) {
@@ -44,7 +29,7 @@ public class MapController {
         List<MapDto> mapdto = null;
  
         try{ 
-            System.out.println(mapservice.getStoreList( inputMapDto.getLat(),inputMapDto.getLon()).size());
+            // System.out.println(mapservice.getStoreList( inputMapDto.getLat(),inputMapDto.getLon()).size());
 
             return mapservice.getStoreList( inputMapDto.getLat(),inputMapDto.getLon());
 
