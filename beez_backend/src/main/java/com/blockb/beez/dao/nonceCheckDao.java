@@ -8,7 +8,8 @@ import org.springframework.stereotype.Repository;
 @Mapper
 @Repository
 public interface nonceCheckDao {
-    public void nonceCheck(String nonceReqId, String prefix);
-    public int nonceCount(); 
+    public void nonceCheck(String nonceReqId, String usedNonce, String prefix);
     public void nonceStausUpdate(Map<String, String> map);
+    public int lastNonce();
+
 }

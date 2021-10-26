@@ -73,10 +73,11 @@ public class TransactionDao {
             System.out.println("현재 nonce :"+ nonce);
             //현재 nonceCheck
             //생성된 블록 + 현재 pending중인 nonce값 체크
-            BigInteger nonce2 = BigInteger.valueOf(nonce.intValue() + nonceCheckDao.nonceCount());
+            BigInteger nonce_at_DB = BigInteger.valueOf(nonceCheckDao.lastNonce());
+            BigInteger nonce2 =nonce.max(BigInteger.valueOf(nonce_at_DB.intValue()+1));
             System.out.println("바뀐 nonce :"+nonce2);
             //NONCE DB에 저장
-            nonceCheckDao.nonceCheck(nonceReqId, String.valueOf(nonce.intValue()));
+            nonceCheckDao.nonceCheck(nonceReqId, String.valueOf(nonce2), String.valueOf(nonce.intValue()));
 
             //gasLimit, gasPrice 너무 낮게 설정 X
             BigInteger gasLimit = BigInteger.valueOf(220000);
@@ -120,14 +121,12 @@ public class TransactionDao {
             } while(!transactionReceipt.isPresent());
             //nonce status update
             nonceStatus.put("requestId", nonceReqId);
-            nonceStatus.put("usedNonce",String.valueOf(nonce2.intValue()));
             nonceStatus.put("status", "success");
             nonceCheckDao.nonceStausUpdate(nonceStatus);
         } catch (CipherException e) {
             e.printStackTrace();
             //nonce status update
             nonceStatus.put("requestId", nonceReqId);
-            nonceStatus.put("usedNonce",String.valueOf(0));
             nonceStatus.put("status", "fail");
             nonceCheckDao.nonceStausUpdate(nonceStatus);
         }

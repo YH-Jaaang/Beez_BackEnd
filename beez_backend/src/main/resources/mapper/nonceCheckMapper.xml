@@ -3,13 +3,13 @@
 
 <mapper namespace="com.blockb.beez.dao.nonceCheckDao">
     <insert id="nonceCheck" parameterType="String">
-        INSERT INTO NONCE (id, request_id, prefix)
-        VALUES (NONCE_SEQ.NEXTVAL, #{nonceReqId}, #{prefix})
+        INSERT INTO NONCE (id, request_id, used_nonce, prefix)
+        VALUES (NONCE_SEQ.NEXTVAL, #{nonceReqId}, #{usedNonce}, #{prefix})
     </insert>
-    <select id="nonceCount" resultType="Integer">
-        SELECT COUNT(*) FROM NONCE WHERE status = 'pending'
+    <select id="lastNonce" resultType="Integer">
+        SELECT MAX(used_nonce) FROM NONCE
     </select>
     <update id="nonceStausUpdate" parameterType="map">
-        UPDATE NONCE SET used_nonce = #{usedNonce}, status = #{status} WHERE request_id = #{requestId} AND status = 'pending'
+        UPDATE NONCE SET status = #{status} WHERE request_id = #{requestId} AND status = 'pending'
     </update>
 </mapper>
