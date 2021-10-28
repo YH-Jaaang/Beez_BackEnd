@@ -73,8 +73,8 @@ public class TransactionDao {
             System.out.println("현재 nonce :"+ nonce);
             //현재 nonceCheck
             //생성된 블록 + 현재 pending중인 nonce값 체크
-            BigInteger nonce_at_DB = BigInteger.valueOf(nonceCheckDao.lastNonce());
-            BigInteger nonce2 =nonce.max(BigInteger.valueOf(nonce_at_DB.intValue()+1));
+            BigInteger nonceAtDB = BigInteger.valueOf(nonceCheckDao.lastNonce());
+            BigInteger nonce2 =nonce.max(BigInteger.valueOf(nonceAtDB.intValue()+1));
             System.out.println("바뀐 nonce :"+nonce2);
             //NONCE DB에 저장
             nonceCheckDao.nonceCheck(nonceReqId, String.valueOf(nonce2), String.valueOf(nonce.intValue()));
@@ -138,6 +138,14 @@ public class TransactionDao {
     /* ########회원가입 이더 전송######## */
     public String ethSend(String toAddress){
         String transactionHash = null;
+         // 현재 날짜 구하기 (시스템 시계, 시스템 타임존)
+         LocalDateTime date =  LocalDateTime.now();
+         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+         System.out.println(formatter.format(date));
+         int random = (int)(Math.random() * 10000)+1;
+         String nonceReqId = formatter.format(date)+String.valueOf(random)+"1234";
+         //map에 넣고 nonce 상태 업데이트
+         Map<String, String> nonceStatus = new HashMap<String, String>();
         try {
             // 1. 지갑을 암호 해독하고 Credential 객체 생성
             Credentials credentials = WalletUtils.loadCredentials(walletPassword, walletDirectory+ File.separator + walletName);
@@ -148,6 +156,14 @@ public class TransactionDao {
             // 2. account에 대한 nonce값 가져오기.
             EthGetTransactionCount ethGetTransactionCount = web3j.ethGetTransactionCount(credentials.getAddress(), DefaultBlockParameterName.LATEST).send();
             BigInteger nonce =  ethGetTransactionCount.getTransactionCount();
+            System.out.println("현재 nonce :"+ nonce);
+            //현재 nonceCheck
+            //생성된 블록 + 현재 pending중인 nonce값 체크
+            BigInteger nonceAtDB = BigInteger.valueOf(nonceCheckDao.lastNonce());
+            BigInteger nonce2 =nonce.max(BigInteger.valueOf(nonceAtDB.intValue()+1));
+            System.out.println("바뀐 nonce :"+nonce2);
+            //NONCE DB에 저장
+            nonceCheckDao.nonceCheck(nonceReqId, String.valueOf(nonce2), String.valueOf(nonce.intValue()));
             
             // 받는사람 주소
             String recipientAddress = toAddress;
@@ -156,14 +172,14 @@ public class TransactionDao {
             // 가스비 설정
             BigInteger gasLimit = BigInteger.valueOf(21000);
             //BigInteger gasPrice = Convert.toWei("2", Unit.GWEI).toBigInteger();
-            BigInteger maxPriorityFeePerGas = Convert.toWei("2", Unit.GWEI).toBigInteger();
-            BigInteger maxFeePerGas = Convert.toWei("2", Unit.GWEI).toBigInteger();
+            BigInteger maxPriorityFeePerGas = Convert.toWei("100", Unit.GWEI).toBigInteger();
+            BigInteger maxFeePerGas = Convert.toWei("100", Unit.GWEI).toBigInteger();
             long chainId = 0x3; //ropsten NetWork
       
             // 3. rawTransaction 생성
             RawTransaction rawTransaction  = RawTransaction.createEtherTransaction(
                        chainId,
-                       nonce,
+                       nonce2,
                        gasLimit,
                        recipientAddress,
                        value,
@@ -185,17 +201,19 @@ public class TransactionDao {
                 System.out.println("checking if transaction " + transactionHash + " is mined....");
                 EthGetTransactionReceipt ethGetTransactionReceiptResp = web3j.ethGetTransactionReceipt(transactionHash).send();
                 transactionReceipt = ethGetTransactionReceiptResp.getTransactionReceipt();
-                Thread.sleep(10000); // Wait 10 sec
+                Thread.sleep(2000); // Wait 10 sec
             } while(!transactionReceipt.isPresent());
-            
-            // System.out.println("Transaction " + transactionHash + " was mined in block # " + transactionReceipt.get().getBlockNumber());
-            // System.out.println("Balance: " + Convert.fromWei(web3j.ethGetBalance(credentials.getAddress(), DefaultBlockParameterName.LATEST).send().getBalance().toString(), Unit.ETHER));
-      
-          } catch (IOException | InterruptedException ex) {
+            nonceStatus.put("requestId", nonceReqId);
+            nonceStatus.put("status", "success");
+            nonceCheckDao.nonceStausUpdate(nonceStatus);
+        } catch (IOException | InterruptedException ex) {
             throw new RuntimeException(ex);
           } catch (CipherException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
+            nonceStatus.put("requestId", nonceReqId);
+            nonceStatus.put("status", "fail");
+            nonceCheckDao.nonceStausUpdate(nonceStatus);
         }
        return transactionHash;
     }
@@ -218,14 +236,5 @@ public class TransactionDao {
 
         return transactionReceipt.getResult();
     }
-
-    // private class PersonalLockException extends RuntimeException
-    // {
-    //     public PersonalLockException(String msg)
-    //     {
-    //         super(msg);
-    //     }
-    // }
-
 
 }
