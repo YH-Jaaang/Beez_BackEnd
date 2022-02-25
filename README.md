@@ -3,6 +3,7 @@
 이더리움 기반 지역상권 선순환 지역화폐 시스템 입니다.
 
 ## 프로젝트 구조
+```bash
 │  .classpath                    
 │  .factorypath                  
 │  .gitignore                    
@@ -132,7 +133,8 @@
         sqlnet.ora
         tnsnames.ora
         truststore.jks
-
+```
 # 프로그램 실행방법
+```bash
  ./mvnw spring-boot:run
-
+```
